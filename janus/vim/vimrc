@@ -103,15 +103,15 @@ nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " vroom commands
 let g:vroom_map_keys = 0
-nmap <leader>tm :VroomRunTestFile<CR>
-nmap <leader>rm :VroomRunNearestTest<CR>
-nmap <leader>lm :VroomRunLastTest<CR>
+nmap <leader>t :VroomRunTestFile<CR>
+nmap <leader>r :VroomRunNearestTest<CR>
+nmap <leader>l :VroomRunLastTest<CR>
 
 " RSpec.vim mappings
-map <leader>t :call RunCurrentSpecFile()<CR>
-map <leader>r :call RunNearestSpec()<CR>
-map <leader>l :call RunLastSpec()<CR>
-map <leader>a :call RunAllSpecs()<CR>
+map <leader>a :call RunCurrentSpecFile()<CR>
+map <leader>aa :call RunNearestSpec()<CR>
+map <leader>k :call RunLastSpec()<CR>
+map <leader>A :call RunAllSpecs()<CR>
 
 " open vim with <leader>v command
 nmap <leader>v :edit $MYVIMRC<CR>
@@ -124,6 +124,11 @@ nmap <leader>ff :let @+ = expand("%:t")<CR>
 " search :Ack
 nmap <leader>ck :Ack 
 nmap <leader>gr :grep -F 
+
+" toggle spell
+nmap <silent> <leader>sp :set spell!<CR>
+nmap <silent> <leader>sz 1z=<CR>
+" http://vimcasts.org/episodes/spell-checking/
 
 " comment out like sublime
 " nmap <D-/> gcc
