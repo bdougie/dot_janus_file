@@ -103,15 +103,15 @@ nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
 
 " vroom commands
 let g:vroom_map_keys = 0
-nmap <leader>rr :VroomRunTestFile<CR>
-nmap <leader>R :VroomRunNearestTest<CR>
-nmap <leader>ll :VroomRunLastTest<CR>
+nmap <leader>tm :VroomRunTestFile<CR>
+nmap <leader>rm :VroomRunNearestTest<CR>
+nmap <leader>lm :VroomRunLastTest<CR>
 
 " RSpec.vim mappings
-map <leader>a :call RunCurrentSpecFile()<CR>
-map <leader>aa :call RunNearestSpec()<CR>
-map <leader>k :call RunLastSpec()<CR>
-map <leader>A :call RunAllSpecs()<CR>
+map <leader>t :call RunCurrentSpecFile()<CR>
+map <leader>r :call RunNearestSpec()<CR>
+map <leader>l :call RunLastSpec()<CR>
+map <leader>a :call RunAllSpecs()<CR>
 
 " open vim with <leader>v command
 nmap <leader>v :edit $MYVIMRC<CR>
@@ -151,10 +151,12 @@ nmap <leader>e :e.<CR>
 nmap <leader>1 :syntax enable<CR>
 
 " copy Sublime indentation rules
-nmap <D-[> <<
-nmap <D-]> >>
-vmap <D-[> <gv
-vmap <D-]> >gv
+" pairing - no indenting for now
+" Vjj> instead
+" nmap <D-[> <<
+" nmap <D-]> >>
+" vmap <D-[> <gv
+" vmap <D-]> >gv
 
 " move highlighted text
 :vmap <C-Right> xpgvlolo
