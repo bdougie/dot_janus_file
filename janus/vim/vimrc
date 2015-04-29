@@ -1,6 +1,42 @@
-""
-"" Janus setup
-""
+""""""""""""""""""""""
+"" Vundler Boiler """"
+""""""""""""""""""""""
+
+set nocompatible              " be iMproved, required
+filetype off                  " required
+filetype plugin on            " nercommenter
+" Wrod wrap
+set wrap
+set textwidth=80
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+  " let Vundle manage Vundle, required
+  Plugin 'gmarik/Vundle.vim'
+  Plugin 'mustache/vim-mustache-handlebars'
+  Plugin 'tpope/vim-fugitive'
+  Plugin 'tpope/vim-rails'
+  Plugin 'tpope/vim-bundler'
+  Plugin 'tpope/vim-surround'
+  Plugin 'tpope/vim-commentary'
+  Plugin 'https://github.com/gorodinskiy/vim-coloresque.git'
+  Plugin 'cakebaker/scss-syntax.vim'
+  Plugin 'scrooloose/nerdtree'
+  Plugin 'kien/ctrlp.vim'
+  Plugin 'skalnik/vim-vroom'
+  Plugin 'farseer90718/flattr.vim'
+  Plugin 'lmeijvogel/vim-yaml-helper'
+  Plugin 'rizzatti/dash.vim'
+  Plugin 'thoughtbot/vim-rspec'
+  Plugin 'https://github.com/scrooloose/nerdcommenter'
+  "brew install the_silver_searcher
+call vundle#end()
+
+""""""""""""""""""""""
+"""" Janus setup """""
+""""""""""""""""""""""
 
 " Define paths
 let g:janus_path = escape(fnamemodify(resolve(expand("<sfile>:p")), ":h"), ' ')
@@ -16,23 +52,168 @@ call janus#add_group("tools")
 call janus#add_group("langs")
 call janus#add_group("colors")
 
-""
-"" Customisations
-""
+""""""""""""""""""""""
+"" Pathogen setup """"
+""""""""""""""""""""""
+
+" Load all groups, custom dir, and janus core
+call janus#load_pathogen()
+
+""""""""""""""""""""""
+"" Customizations """"
+""""""""""""""""""""""
 
 if filereadable(expand("~/.vimrc.before"))
   source ~/.vimrc.before
 endif
 
-
 " Disable plugins prior to loading pathogen
 exe 'source ' . g:janus_vim_path . '/core/plugins.vim'
 
-""
-"" Pathogen setup
-""
-
-" Load all groups, custom dir, and janus core
-call janus#load_pathogen()
-
 " .vimrc.after is loaded after the plugins have loaded
+" Source the vimrc file after saving it
+if has("autocmd")
+  autocmd bufwritepost .vimrc source $MYVIMRC
+endif
+
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
+" bind \ (backward slash) to grep shortcut
+nnoremap \ :Ag<SPACE>
+
+" bind K to grep word under cursor
+nnoremap K :grep! "\b<C-R><C-W>\b"<CR>:cw<CR>
+
+""""""""""""""""""""""
+"""""" Mappings """"""
+""""""""""""""""""""""
+
+" mapleader change to <spacebar>
+:let mapleader = " "
+
+" vroom commands
+let g:vroom_map_keys = 0
+nmap <leader>rr :VroomRunTestFile<CR>
+nmap <leader>R :VroomRunNearestTest<CR>
+nmap <leader>ll :VroomRunLastTest<CR>
+
+" RSpec.vim mappings
+map <leader>a :call RunCurrentSpecFile()<CR>
+map <leader>aa :call RunNearestSpec()<CR>
+map <leader>k :call RunLastSpec()<CR>
+map <leader>A :call RunAllSpecs()<CR>
+
+" open vim with <leader>v command
+nmap <leader>v :edit $MYVIMRC<CR>
+
+" copies the current path to vim clipboard - path, fullpath, just filename
+nmap <leader>f :let @+=expand("%")<CR> 
+nmap <leader>F :let @+ = expand("%:p")<CR>
+nmap <leader>ff :let @+ = expand("%:t")<CR>
+
+" search :Ack
+nmap <leader>ck :Ack 
+nmap <leader>gr :grep -F 
+
+" comment out like sublime
+" nmap <D-/> gcc
+
+" maps buffer searching
+nmap <leader>bb :ls<CR>
+nmap <leader>bl :b#<CR>
+nmap <leader>bc :CtrlPBuffer<CR>
+
+" maps vertical and horizontal switching
+nmap <leader>H :windo wincmd K<CR>
+nmap <leader>h :windo wincmd H<CR>
+
+" open new and split windows
+nmap <leader>ss :Sex<CR>
+nmap <leader>vv :Vex<CR>
+
+" maps the quit without changes to <leader>q
+nmap <leader>q :q!<CR>
+
+" maps spelling mistakes
+nmap <leader>e :e.<CR>
+
+" Syntaxt enabling
+nmap <leader>1 :syntax enable<CR>
+
+" copy Sublime indentation rules
+nmap <D-[> <<
+nmap <D-]> >>
+vmap <D-[> <gv
+vmap <D-]> >gv
+
+" move highlighted text
+:vmap <C-Right> xpgvlolo
+:vmap <C-left> xhPgvhoho
+:vnoremap <Left> h
+:vnoremap <Right> l
+:vnoremap <Up> k
+:vnoremap <Down> j
+vmap <C-Down> xjPgvjojo
+vmap <C-Up> xkPgvkoko
+
+" YAML nav mappings, mainly for the en.yml
+nmap <leader>yp :YamlGetFullPath<CR>
+nmap <leader>yk :YamlGoToKey
+nmap <leader>ym :YamlGoToParent<CR>
+
+" Word swapping http://vim.wikia.com/wiki/VimTip47
+" :nnoremap <silent> gv xph
+" :nnoremap <silent> gw "_yiw:s/\(\%#\w\+\)\(\W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>
+" :nnoremap <silent> gl "_yiw?\w\+\_W\+\%#<CR>:s/\(\%#\w\+\)\(\_W\+\)\(\w\+\)/\3\2\1/<CR><c-o><c-l>
+" Swap the current character (the character under the cursor) with the next:
+
+" xp
+" Swap the current character with the previous:
+
+" Xp
+" Swap the current line with the next (but see below for a better method):
+
+" ddp
+" Swap the current line with the previous:
+
+" ddkP or ddkkp
+" Swap the current word with the next (see note):
+
+" dawwP
+" dawelp
+" hdeep                (works at start of first word)
+"xdiwdwep"xp         (works with most punctuations too)
+" Saving, etc
+
+nnoremap <Leader>w :retab<bar>:w<cr> " changes tabs to spaces and save
+nnoremap <Leader>wq :retab<bar>:wq<cr> " changes tabs to spaces, saves, and quits
+nnoremap <Leader>q :q<cr>
+
+" crete tabs
+" no more creating tabs for now
+" nmap <leader>ta :tabedit<CR>
+
+" nvm local shortcut
+nmap <leader>nvm :! source ~/.nvm/nvm.sh<CR>
+
+" set indent in normal mode to be "="
+set autoindent
+set cindent
+
+" color scheme
+set background=light
+" colorscheme github "light
+" colorscheme base16-atelierforest "light
+" colorscheme base16-atelierseaside "lightgreen
+colorscheme flattr "dark
+
